@@ -28,10 +28,18 @@ class MyCart {
     // array = [{key:value},{key:value}]
     objectFindByKey = (value) => {
         var values = toJS(this.cartList);
-        console.log(values)
-        var item = values.filter(item => item.id === value);
-        console.log("found item: " + item);
-        return item;
+        console.log("converted to JS array from observable " + values)
+        var contains = false;
+        values.forEach(element => {
+            if (element.name.id === value) {
+                contains = true;
+            }
+        });
+        if (contains) {
+            return true;
+        } else {
+            return null;
+        }
     }
 
     contains = (id) => {
@@ -43,6 +51,7 @@ class MyCart {
                 return false
             }
         } catch (err) {
+            return false
             console.log(err.message);
         }
     }
