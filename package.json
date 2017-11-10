@@ -1,0 +1,30 @@
+{
+	"name": "FlipKart",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest"
+	},
+	"dependencies": {
+		"autobind-decorator": "^2.1.0",
+		"axios": "^0.17.0",
+		"babel-preset-react-native-stage-0": "^1.0.1",
+		"mobx": "^3.3.1",
+		"mobx-react": "^4.3.4",
+		"react": "16.0.0",
+		"react-native": "0.50.1",
+		"react-native-material-design": "^0.3.7",
+		"react-navigation": "^1.0.0-beta.19",
+		"typescript": "^2.6.1"
+	},
+	"devDependencies": {
+		"babel-jest": "21.2.0",
+		"babel-preset-react-native": "4.0.0",
+		"jest": "21.2.1",
+		"react-test-renderer": "16.0.0"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
+}
