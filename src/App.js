@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {StackNavigator} from 'react-navigation';
 import {Introduction} from '../src/components/Introduction';
-import {Dashboard} from '../src/components/Dashboard';
+import {RootDashboard} from '../src/components/RootDashboard';
 import {ProfileScreen} from '../src/components/ProfileScreen';
 
 const App = StackNavigator({
@@ -9,7 +9,7 @@ const App = StackNavigator({
         screen: Introduction
     },
     Intro: {
-        screen: Dashboard
+        screen: RootDashboard
     },
     Profile: {
         screen: ProfileScreen

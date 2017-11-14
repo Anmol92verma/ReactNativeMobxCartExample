@@ -12,15 +12,14 @@ import {
     ToolbarAndroid
 } from 'react-native';
 import axios from 'axios';
-import myCart from '../store/MyCart'
+
+import {addItemToCart, deleteFromCart} from '../store/actions';
 
 var {height, width} = Dimensions.get('window');
-import {observer} from 'mobx-react/native';
 
 var rowWidth = width;
 var rowHeight = height / 2;
 
-observer
 export class Dashboard extends React.Component {
 
     constructor(props) {
@@ -56,10 +55,6 @@ export class Dashboard extends React.Component {
         }}/>);
     };
 
-    onAddToCart(item) {
-        myCart.addItemToCart(item)
-    }
-
     _renderItem = ({item}) => {
 
         return (
@@ -75,25 +70,26 @@ export class Dashboard extends React.Component {
                     uri: item.thumbnailUrl
                 }}/>
 
-                <Button onPress={() => this.onAddToCart(item)} title={this.getButtonText(item)}></Button>
+                <Button
+                    onPress={(item) => this.props.dispatch.addToCart(item)}
+                    title={this.getButtonText(item)}></Button>
             </View>
         );
 
     }
 
     getButtonText = (item) => {
-        if (myCart.contains(item.id)) {
-            return "Item Already inCart";
-        } else {
-            return "Add To Cart";
-        }
+        // if (myCart.contains(item.id)) {   return "Item Already in Cart"; } else {
+        return "Add To Cart";
+        // }
     }
 
     onActionSelected({position}) {
-        console.warn("Cart items " + myCart.itemCount())
+        //console.warn("Cart items " + myCart.itemCount())
     }
 
     render() {
+
         if (this.state.refreshing) {
             return (<ActivityIndicator
                 animating={this.state.animating}
