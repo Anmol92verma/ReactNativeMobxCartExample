@@ -5,7 +5,7 @@ import {Dashboard} from './Dashboard';
 import configureStore from '../store/configureStore'
 const store = configureStore()
 
-export class RootDashboard extends Component {
+export class RootDashboard extends React.Component {
 
     render() {
         return (
