@@ -8,6 +8,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.17.0",
+		"prop-types": "^15.6.0",
 		"react": "16.0.0",
 		"react-native": "^0.50.3",
 		"react-native-material-design": "^0.3.7",

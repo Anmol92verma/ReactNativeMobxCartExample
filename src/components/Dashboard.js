@@ -13,25 +13,32 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-import {addItemToCart, deleteFromCart} from '../store/actions';
+import {addToCart, deleteFromCart} from '../store/Actions';
+import {connect} from 'react-redux';
+import PropTypes from "prop-types";
 
 var {height, width} = Dimensions.get('window');
 
 var rowWidth = width;
 var rowHeight = height / 2;
 
-export class Dashboard extends React.Component {
+class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             dataSource: [],
-            refreshing: true
+            refreshing: true,
+            cartItems: []
         };
     }
 
     componentDidMount() {
         this.getPhotos();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({cartItems: nextProps.items})
     }
 
     getPhotos = () => {
@@ -71,25 +78,37 @@ export class Dashboard extends React.Component {
                 }}/>
 
                 <Button
-                    onPress={(item) => this.props.dispatch.addToCart(item)}
+                    onPress={() => this.props.dispatch(addToCart(item))}
                     title={this.getButtonText(item)}></Button>
             </View>
         );
 
     }
 
+    contains(item) {
+        var found = false;
+        for (var i = 0; i < this.state.cartItems.length; i++) {
+            if (this.state.cartItems[i].id == item.id) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
+
     getButtonText = (item) => {
-        // if (myCart.contains(item.id)) {   return "Item Already in Cart"; } else {
-        return "Add To Cart";
-        // }
+        if (this.contains(item)) {
+            return "Item Already in Cart";
+        } else {
+            return "Add To Cart";
+        }
     }
 
     onActionSelected({position}) {
-        //console.warn("Cart items " + myCart.itemCount())
+        console.warn("Cart items " + this.state.cartItems.length)
     }
 
-    render() {
-
+    getRenderMain = () => {
         if (this.state.refreshing) {
             return (<ActivityIndicator
                 animating={this.state.animating}
@@ -122,12 +141,19 @@ export class Dashboard extends React.Component {
                         onRefresh={this.getPhotos}
                         renderItem={this._renderItem}></FlatList>
                 </View>
-
             );
-        }
 
+        }
+    }
+
+    render() {
+        return this.getRenderMain();
     }
 }
+
+Dashboard.propTypes = {
+    dispatch: PropTypes.func
+};
 
 var styles = StyleSheet.create({
     page: {
@@ -145,3 +171,11 @@ var styles = StyleSheet.create({
         height: 56
     }
 });
+
+const mapStateToProps = (state) => {
+    console.log("map state to props");
+    console.log(state);
+    return {items: state.peopleReducer.items};
+};
+
+export default connect(mapStateToProps)(Dashboard);
