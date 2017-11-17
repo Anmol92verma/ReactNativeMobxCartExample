@@ -22,35 +22,17 @@ var {height, width} = Dimensions.get('window');
 var rowWidth = width;
 var rowHeight = height / 2;
 
-class Dashboard extends React.Component {
+class CartComponent extends React.Component {
+
     constructor(props) {
         super(props);
-
         this.state = {
-            dataSource: [],
-            refreshing: true,
-            cartItems: []
+            cartItems: props.items
         };
-    }
-
-    componentDidMount() {
-        this.getPhotos();
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({cartItems: nextProps.items})
-    }
-
-    getPhotos = () => {
-        this.setState({refreshing: true})
-        axios
-            .get('https://jsonplaceholder.typicode.com/photos', {})
-            .then((response) => {
-                this.setState({dataSource: response.data, refreshing: false})
-            })
-            .catch((error) => {
-                this.setState({refreshing: false})
-            });
     }
 
     renderSeparator = () => {
@@ -88,7 +70,7 @@ class Dashboard extends React.Component {
     onClickAddToCart = (item) => {
         this
             .props
-            .dispatch(addToCart(item))
+            .dispatch(deleteFromCart(item))
     }
 
     contains(item) {
@@ -103,55 +85,40 @@ class Dashboard extends React.Component {
     }
 
     getButtonText = (item) => {
-        if (this.contains(item)) {
-            return "Item Already in Cart";
-        } else {
-            return "Add To Cart";
-        }
+        return "Remove from Cart";
     }
 
     onActionSelected = ({position}) => {
-        const {navigate} = this.props.navigation;
-        navigate('CartScreen', {name: 'Jane'})
+        this
+            .props
+            .navigator
+            .goBack(null);
     }
 
     getRenderMain = () => {
-        if (this.state.refreshing) {
-            return (<ActivityIndicator
-                animating={this.state.animating}
-                style={[
-                styles.centering, {
-                    height: 80
-                }
-            ]}
-                size="large"/>);
-        } else {
-            return (
-                <View>
-                    <ToolbarAndroid
-                        titleColor="white"
-                        style={styles.toolbar}
-                        title="Flipkart"
-                        actions={[{
-                            title: 'Cart',
-                            icon: require('../icons/icon.png'),
-                            show: 'always'
-                        }
-                    ]}
-                        onActionSelected={this.onActionSelected}></ToolbarAndroid>
-                    <FlatList
-                        style={styles.page}
-                        data={this.state.dataSource}
-                        keyExtractor={item => item.id}
-                        ItemSeparatorComponent={this.renderSeparator}
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.getPhotos}
-                        extraData={this.state}
-                        renderItem={this._renderItem}></FlatList>
-                </View>
-            );
-
-        }
+        return (
+            <View>
+                <ToolbarAndroid
+                    titleColor="white"
+                    style={styles.toolbar}
+                    title="Flipkart"
+                    actions={[{
+                        title: 'Cart',
+                        icon: require('../icons/icon.png'),
+                        show: 'always'
+                    }
+                ]}
+                    onActionSelected={this.onActionSelected}></ToolbarAndroid>
+                <FlatList
+                    style={styles.page}
+                    data={this.state.cartItems}
+                    keyExtractor={item => item.id}
+                    ItemSeparatorComponent={this.renderSeparator}
+                    onRefresh={this.getPhotos}
+                    extraData={this.state}
+                    renderItem={this._renderItem}></FlatList>
+            </View>
+        );
     }
 
     render() {
@@ -159,7 +126,7 @@ class Dashboard extends React.Component {
     }
 }
 
-Dashboard.propTypes = {
+CartComponent.propTypes = {
     dispatch: PropTypes.func
 };
 
@@ -186,4 +153,4 @@ const mapStateToProps = (state) => {
     return {items: state.peopleReducer.items};
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(CartComponent);
