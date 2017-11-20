@@ -12,6 +12,7 @@ import {
     ToolbarAndroid
 } from 'react-native';
 import axios from 'axios';
+import IconBadge from 'react-native-icon-badge';
 
 import {addToCart, deleteFromCart} from '../store/Actions';
 import {connect} from 'react-redux';
@@ -104,7 +105,7 @@ class Dashboard extends React.Component {
 
     getButtonText = (item) => {
         if (this.contains(item)) {
-            return "Item Already in Cart";
+            return "Item in Cart";
         } else {
             return "Add To Cart";
         }
@@ -113,6 +114,60 @@ class Dashboard extends React.Component {
     onActionSelected = ({position}) => {
         const {navigate} = this.props.navigation;
         navigate('CartScreen', {name: 'Jane'})
+    }
+
+    getBadgeElement = () => {
+        return (
+            <Text style={{
+                color: '#FFFFFF'
+            }}>
+                {this.state.cartItems.length
+}
+            </Text>
+        );
+    }
+
+    getMainElement = () => {
+        return (< View style = {{backgroundColor:'#489EFE', width:50, height:50, margin:6 }}/>);
+    }
+
+    getMainBadge = () => {
+        return (<IconBadge
+            MainElement={this.getMainElement()}
+            BadgeElement={this.getBadgeElement()}
+            IconBadgeStyle={{
+                width: 30,
+                height: 30,
+                backgroundColor: '#FF00EE'
+            }}
+            Hidden={this.state.cartItems.length == 0}></IconBadge >);
+    }
+
+    getToolbar = () => {
+        return (
+            <View
+                style={{
+                backgroundColor: '#000000',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                {this.getTitle()}
+                {this.getMainBadge()}
+            </View>
+        );
+    }
+
+    getTitle = () => {
+        return (
+            <Text
+                style={{
+                color: '#FFFFFF',
+                alignSelf: 'center'
+            }}>
+                Flipkart
+            </Text>
+        );
     }
 
     getRenderMain = () => {
@@ -128,17 +183,7 @@ class Dashboard extends React.Component {
         } else {
             return (
                 <View>
-                    <ToolbarAndroid
-                        titleColor="white"
-                        style={styles.toolbar}
-                        title="Flipkart"
-                        actions={[{
-                            title: 'Cart',
-                            icon: require('../icons/icon.png'),
-                            show: 'always'
-                        }
-                    ]}
-                        onActionSelected={this.onActionSelected}></ToolbarAndroid>
+                    {this.getToolbar()}
                     <FlatList
                         style={styles.page}
                         data={this.state.dataSource}
