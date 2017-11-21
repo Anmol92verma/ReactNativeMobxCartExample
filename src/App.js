@@ -6,11 +6,11 @@ import {ProfileScreen} from '../src/components/ProfileScreen';
 import CartComponent from '../src/components/CartComponent'
 
 const App = StackNavigator({
-    Home: {
-        screen: Introduction
-    },
     Intro: {
         screen: Dashboard
+    },
+    Home: {
+        screen: Introduction
     },
     Profile: {
         screen: ProfileScreen
